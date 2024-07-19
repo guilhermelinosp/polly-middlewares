@@ -1,3 +1,4 @@
+using System.Net;
 using Polly;
 using Polly.Fallback;
 
@@ -15,7 +16,7 @@ public class FallbackMiddleware
 		_fallbackPolicy = Policy
 			.Handle<HttpRequestException>()
 			.OrResult<HttpResponseMessage>(r => !r.IsSuccessStatusCode)
-			.FallbackAsync(new HttpResponseMessage(System.Net.HttpStatusCode.OK)
+			.FallbackAsync(new HttpResponseMessage(HttpStatusCode.OK)
 			{
 				Content = new StringContent("This is a fallback response due to an error.")
 			});
@@ -26,7 +27,7 @@ public class FallbackMiddleware
 		await _fallbackPolicy.ExecuteAsync(async () =>
 		{
 			await _next(context);
-			return new HttpResponseMessage(System.Net.HttpStatusCode.OK);
+			return new HttpResponseMessage(HttpStatusCode.OK);
 		});
 	}
 }

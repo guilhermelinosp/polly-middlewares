@@ -1,3 +1,4 @@
+using System.Net;
 using Polly;
 using Polly.CircuitBreaker;
 
@@ -25,7 +26,7 @@ public class CircuitBreakerMiddleware
 			await _circuitBreakerPolicy.ExecuteAsync(async () =>
 			{
 				await _next(context);
-				return new HttpResponseMessage(System.Net.HttpStatusCode.OK);
+				return new HttpResponseMessage(HttpStatusCode.OK);
 			});
 		}
 		catch (BrokenCircuitException)

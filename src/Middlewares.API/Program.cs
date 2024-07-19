@@ -32,8 +32,6 @@ services.AddCors(options =>
 	});
 });
 
-services.AddSingleton<IRateLimiter, RateLimiter>();
-
 host.UseSerilog((host, services, logging) =>
 {
 	logging
@@ -79,6 +77,7 @@ app.UseMiddleware<CorsMiddleware>();
 app.UseMiddleware<AuthenticationMiddleware>();
 app.UseMiddleware<AuthorizationMiddleware>();
 app.UseMiddleware<CompressionMiddleware>();
+app.UseMiddleware<SecurityMiddleware>();
 
 // Polly middlewares
 app.UseMiddleware<BulkheadMiddleware>();
@@ -86,11 +85,7 @@ app.UseMiddleware<CircuitBreakerMiddleware>();
 app.UseMiddleware<FallbackMiddleware>();
 app.UseMiddleware<RetryMiddleware>();
 app.UseMiddleware<TimeoutMiddleware>();
-
-app.UseMiddleware<SecurityMiddleware>();
-app.UseMiddleware<RateLimitingMiddleware>();
-app.UseMiddleware<ThrottlingMiddleware>();
-app.UseMiddleware<BlockingMiddleware>();
+app.UseMiddleware<RateLimitMiddleware>();
 
 // Configure health checks
 app.MapHealthChecks("/", new HealthCheckOptions
